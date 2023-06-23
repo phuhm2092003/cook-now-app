@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "97329866675",
+    "firebase_url": "https://cooknowapp-ec6f5-default-rtdb.firebaseio.com",
+    "project_id": "cooknowapp-ec6f5",
+    "storage_bucket": "cooknowapp-ec6f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97329866675:android:54fcb8491b8945bf8a8dc6",
+        "android_client_info": {
+          "package_name": "fpt.edu.cook_now_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "97329866675-ch0mft052mrgh5mga7j3c6aimk52rp09.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVapI6RnHVNltilV-yngBTOqgPTdGXfzA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "97329866675-ch0mft052mrgh5mga7j3c6aimk52rp09.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
