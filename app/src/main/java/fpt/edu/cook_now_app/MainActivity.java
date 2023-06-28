@@ -48,5 +48,6 @@ public class MainActivity extends AppCompatActivity {
         PageAdapter pageAdapter = new PageAdapter(this);
         pageMain = findViewById(R.id.pageMain);
         pageMain.setAdapter(pageAdapter);
+        pageMain.setUserInputEnabled(false);
     }
 }
