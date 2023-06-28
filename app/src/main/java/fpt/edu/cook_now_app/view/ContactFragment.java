@@ -93,7 +93,7 @@ public class ContactFragment extends Fragment {
     }
 
     private void performSendIdea(String fullname, String phoneNumber, String email, String content) {
-        // Push data to database Firebase RealTime
+        // Thêm dữ liệu phản hồi lên RealTimeDatabase
         DatabaseReference contactRef = FirebaseDatabase
                 .getInstance()
                 .getReference("contacts")
