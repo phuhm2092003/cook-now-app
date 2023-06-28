@@ -47,9 +47,9 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initView(view);
-        setUpRecyclerView();
-        loadDataFromFireBase();
-        filterDataFoodTypes();
+        initFoodTypesRecyclerView();
+        fetchFoodTypesFromFirebase();
+        filterFoodTypes();
     }
 
     private void initView(@NonNull View view) {
@@ -57,7 +57,7 @@ public class HomeFragment extends Fragment {
         searchEditText = view.findViewById(R.id.searchEditText);
     }
 
-    private void setUpRecyclerView() {
+    private void initFoodTypesRecyclerView() {
         foodTypes = new ArrayList<>();
 
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 2);
@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
         foodTypesRecyclerView.setNestedScrollingEnabled(false);
     }
 
-    private void loadDataFromFireBase() {
+    private void fetchFoodTypesFromFirebase() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("foods_type");
         databaseReference.addChildEventListener(new ChildEventListener() {
             @SuppressLint("NotifyDataSetChanged")
@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void filterDataFoodTypes() {
+    private void filterFoodTypes() {
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
