@@ -162,7 +162,7 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/sendButton"
+            android:id="@+id/sendIdeaButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="16dp"

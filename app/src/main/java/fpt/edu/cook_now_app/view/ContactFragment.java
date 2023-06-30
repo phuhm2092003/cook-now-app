@@ -22,7 +22,7 @@ public class ContactFragment extends Fragment {
     public static final String REGEX_FULLNAME = ".*\\d.*";
     public static final String REGEX_EMAIL = "[a-zA-Z\\d._%+-]+@[a-zA-Z\\d.-]+\\.[a-zA-Z]{2,}";
     private EditText fullnameEditText, phoneNumberEditText, emailEditText, contentEditText;
-    private ConstraintLayout sendButton;
+    private ConstraintLayout sendIdeaButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,7 +35,7 @@ public class ContactFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
 
-        sendButton.setOnClickListener(view1 -> handleSendIdea());
+        sendIdeaButton.setOnClickListener(view1 -> handleSendIdea());
     }
 
     private void initView(@NonNull View view) {
@@ -43,7 +43,7 @@ public class ContactFragment extends Fragment {
         phoneNumberEditText = view.findViewById(R.id.phoneNumberEditText);
         emailEditText = view.findViewById(R.id.emailEditText);
         contentEditText = view.findViewById(R.id.contentEditText);
-        sendButton = view.findViewById(R.id.sendButton);
+        sendIdeaButton = view.findViewById(R.id.sendIdeaButton);
     }
 
     private void handleSendIdea() {
@@ -57,7 +57,7 @@ public class ContactFragment extends Fragment {
             return;
         }
 
-        if (isFullnameInvalid(fullname)) {
+        if (isFullNameInvalid(fullname)) {
             showMessageToast("Họ và tên vui lòng không dùng ký tự số");
             return;
         }
@@ -80,7 +80,7 @@ public class ContactFragment extends Fragment {
         return fullname.isEmpty() || phoneNumber.isEmpty() || email.isEmpty() || content.isEmpty();
     }
 
-    private boolean isFullnameInvalid(String fullname) {
+    private boolean isFullNameInvalid(String fullname) {
         return fullname.matches(REGEX_FULLNAME);
     }
 
