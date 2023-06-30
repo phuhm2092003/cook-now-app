@@ -10,7 +10,6 @@ import fpt.edu.cook_now_app.MainActivity;
 import fpt.edu.cook_now_app.R;
 
 public class SplashActivity extends AppCompatActivity {
-
     public static final int TIME_DELAY = 3000;
 
     @Override
@@ -19,7 +18,11 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         new Handler().postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            launchMainActivity();
         }, TIME_DELAY);
+    }
+
+    private void launchMainActivity() {
+        startActivity(new Intent(SplashActivity.this, MainActivity.class));
     }
 }
