@@ -1,56 +1,53 @@
 package fpt.edu.cook_now_app;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 import fpt.edu.cook_now_app.adpter.PageAdapter;
 
 public class MainActivity extends AppCompatActivity {
-    private ViewPager2 pageMain;
-    private BottomNavigationView menuBottom;
+    private ViewPager2 mainViewPager;
+    private BottomNavigationView bottomMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
         initViewPager();
+        initBottomMenu();
+    }
 
-        menuBottom.setOnItemSelectedListener(item -> {
+    private void initViewPager() {
+        mainViewPager = findViewById(R.id.mainViewPager);
+
+        PageAdapter pageAdapter = new PageAdapter(this);
+        mainViewPager.setAdapter(pageAdapter);
+        mainViewPager.setUserInputEnabled(false);
+    }
+
+    private void initBottomMenu() {
+        bottomMenu = findViewById(R.id.bottomMenu);
+        bottomMenu.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_home:
-                    pageMain.setCurrentItem(0, false);
+                    mainViewPager.setCurrentItem(0, false);
                     break;
                 case R.id.menu_search:
-                    pageMain.setCurrentItem(1, false);
+                    mainViewPager.setCurrentItem(1, false);
                     break;
                 case R.id.menu_contact:
-                    pageMain.setCurrentItem(2, false);
+                    mainViewPager.setCurrentItem(2, false);
                     break;
             }
             return true;
         });
     }
 
-    private void initView() {
-        menuBottom = findViewById(R.id.menuBottom);
-    }
-
-    private void initViewPager() {
-        PageAdapter pageAdapter = new PageAdapter(this);
-        pageMain = findViewById(R.id.pageMain);
-        pageMain.setAdapter(pageAdapter);
-        pageMain.setUserInputEnabled(false);
-    }
-
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+    }
 }

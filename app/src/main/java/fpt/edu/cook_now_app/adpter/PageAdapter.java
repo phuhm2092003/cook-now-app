@@ -10,7 +10,6 @@ import fpt.edu.cook_now_app.view.HomeFragment;
 import fpt.edu.cook_now_app.view.SearchFragment;
 
 public class PageAdapter extends FragmentStateAdapter {
-
     public static final int NUMBER_OF_PAGES = 3;
 
     public PageAdapter(@NonNull FragmentActivity fragmentActivity) {
