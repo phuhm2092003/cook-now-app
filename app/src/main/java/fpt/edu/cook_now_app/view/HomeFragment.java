@@ -32,9 +32,11 @@ import fpt.edu.cook_now_app.adpter.FoodTypeAdapter;
 import fpt.edu.cook_now_app.model.FoodType;
 
 public class HomeFragment extends Fragment {
-    private RecyclerView foodTypesRecyclerView;
+    public static final String EXTRA_ID = "id";
+    public static final String EXTRA_NAME = "name";
+    private RecyclerView foodTypeRecyclerView;
     private FoodTypeAdapter foodTypeAdapter;
-    private List<FoodType> foodTypes;
+    private List<FoodType> foodTypeList;
     private EditText searchEditText;
 
     @Override
@@ -46,39 +48,38 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initView(view);
-        initFoodTypesRecyclerView();
-        fetchFoodTypesFromFirebase();
-        filterFoodTypes();
+        initFoodTypeRecyclerView();
+        fetchFoodTypeListFromFirebase();
+        filterFoodTypeList();
     }
 
     private void initView(@NonNull View view) {
-        foodTypesRecyclerView = view.findViewById(R.id.foodTypesRecyclerView);
+        foodTypeRecyclerView = view.findViewById(R.id.foodTypeRecyclerView);
         searchEditText = view.findViewById(R.id.searchEditText);
     }
 
-    private void initFoodTypesRecyclerView() {
-        foodTypes = new ArrayList<>();
+    private void initFoodTypeRecyclerView() {
+        foodTypeList = new ArrayList<>();
 
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 2);
-        foodTypesRecyclerView.setLayoutManager(linearLayoutManager);
+        foodTypeRecyclerView.setLayoutManager(linearLayoutManager);
 
-        foodTypeAdapter = new FoodTypeAdapter(foodTypes, foodType -> {
+        foodTypeAdapter = new FoodTypeAdapter(foodTypeList, foodType -> {
             Intent intent = new Intent(getActivity(), FoodRecipesActivity.class);
-            intent.putExtra("id", foodType.getId());
-            intent.putExtra("name", foodType.getName());
+            intent.putExtra(EXTRA_ID, foodType.getId());
+            intent.putExtra(EXTRA_NAME, foodType.getName());
             startActivity(intent);
 
         });
-        foodTypesRecyclerView.setAdapter(foodTypeAdapter);
+        foodTypeRecyclerView.setAdapter(foodTypeAdapter);
 
-        foodTypesRecyclerView.setNestedScrollingEnabled(false);
+        foodTypeRecyclerView.setNestedScrollingEnabled(false);
     }
 
-    private void fetchFoodTypesFromFirebase() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("foods_type");
-        databaseReference.addChildEventListener(new ChildEventListener() {
+    private void fetchFoodTypeListFromFirebase() {
+        DatabaseReference foodTypeRef = FirebaseDatabase.getInstance().getReference("foods_type");
+        foodTypeRef.addChildEventListener(new ChildEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -86,18 +87,18 @@ public class HomeFragment extends Fragment {
                 FoodType foodType = snapshot.getValue(FoodType.class);
                 if (foodType != null) {
                     int index = -1;
-                    for (int i = 0; i < foodTypes.size(); i++) {
-                        if (foodTypes.get(i).getId() == foodType.getId()) {
+                    for (int i = 0; i < foodTypeList.size(); i++) {
+                        if (foodTypeList.get(i).getId() == foodType.getId()) {
                             index = i;
                             break;
                         }
                     }
 
                     if (index != -1) {
-                        foodTypes.set(index, foodType);
+                        foodTypeList.set(index, foodType);
                         foodTypeAdapter.notifyItemChanged(index);
                     } else {
-                        foodTypes.add(foodType);
+                        foodTypeList.add(foodType);
                         foodTypeAdapter.notifyDataSetChanged();
                     }
                 }
@@ -109,15 +110,15 @@ public class HomeFragment extends Fragment {
                 FoodType foodTypeUpdate = snapshot.getValue(FoodType.class);
                 if (foodTypeUpdate != null) {
                     int index = -1;
-                    for (int i = 0; i < foodTypes.size(); i++) {
-                        if (foodTypes.get(i).getId() == foodTypeUpdate.getId()) {
+                    for (int i = 0; i < foodTypeList.size(); i++) {
+                        if (foodTypeList.get(i).getId() == foodTypeUpdate.getId()) {
                             index = i;
                             break;
                         }
                     }
 
                     if (index != -1) {
-                        foodTypes.set(index, foodTypeUpdate);
+                        foodTypeList.set(index, foodTypeUpdate);
                         foodTypeAdapter.notifyItemChanged(index);
                     }
                 }
@@ -140,7 +141,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void filterFoodTypes() {
+    private void filterFoodTypeList() {
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -152,20 +153,20 @@ public class HomeFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 // Tìm kiếm loại món ăn theo tên
                 String searchText = charSequence.toString().trim().toLowerCase();
-                List<FoodType> foodTypesFilter;
+                List<FoodType> foodTypeFilterList;
 
                 if (searchText.isEmpty()) {
-                    foodTypesFilter = foodTypes;
+                    foodTypeFilterList = foodTypeList;
                 } else {
-                    foodTypesFilter = new ArrayList<>();
-                    for (FoodType foodType : foodTypes) {
+                    foodTypeFilterList = new ArrayList<>();
+                    for (FoodType foodType : foodTypeList) {
                         if (foodType.getName().toLowerCase().contains(searchText)) {
-                            foodTypesFilter.add(foodType);
+                            foodTypeFilterList.add(foodType);
                         }
                     }
                 }
 
-                foodTypeAdapter.setFoodTypes(foodTypesFilter);
+                foodTypeAdapter.setFoodTypes(foodTypeFilterList);
                 foodTypeAdapter.notifyDataSetChanged();
             }
 

@@ -62,7 +62,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_medium"
+                android:fontFamily="@font/inter_semi_bold"
                 android:text="Học nấu ăn ngay hôm nay"
                 android:textColor="@color/BlackPrimary"
                 android:textSize="16sp" />
@@ -76,7 +76,7 @@
                 android:textSize="13sp" />
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/foodTypesRecyclerView"
+            android:id="@+id/foodTypeRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
