@@ -14,13 +14,17 @@
         android:theme="@style/Theme.Cooknowapp"
         tools:targetApi="31">
         <activity
-            android:theme="@style/Theme.MainScreen"
-            android:name=".MainActivity"
+            android:theme="@style/Theme.FoodList"
+            android:name=".view.FoodRecipesActivity"
             android:exported="false" />
         <activity
-            android:theme="@style/Theme.SplashScreen"
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MainScreen" />
+        <activity
             android:name=".view.SplashActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

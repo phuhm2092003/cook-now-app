@@ -50,4 +50,7 @@ public class MainActivity extends AppCompatActivity {
         pageMain.setAdapter(pageAdapter);
         pageMain.setUserInputEnabled(false);
     }
+
+    @Override
+    public void onBackPressed() {}
 }

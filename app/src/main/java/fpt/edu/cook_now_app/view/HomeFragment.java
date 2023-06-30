@@ -1,6 +1,7 @@
 package fpt.edu.cook_now_app.view;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -63,7 +64,13 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 2);
         foodTypesRecyclerView.setLayoutManager(linearLayoutManager);
 
-        foodTypeAdapter = new FoodTypeAdapter(foodTypes);
+        foodTypeAdapter = new FoodTypeAdapter(foodTypes, foodType -> {
+            Intent intent = new Intent(getActivity(), FoodRecipesActivity.class);
+            intent.putExtra("id", foodType.getId());
+            intent.putExtra("name", foodType.getName());
+            startActivity(intent);
+
+        });
         foodTypesRecyclerView.setAdapter(foodTypeAdapter);
 
         foodTypesRecyclerView.setNestedScrollingEnabled(false);
