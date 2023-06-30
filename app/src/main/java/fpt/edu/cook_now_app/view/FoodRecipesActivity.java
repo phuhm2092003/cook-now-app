@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ import fpt.edu.cook_now_app.adpter.FoodRecipeAdapter;
 import fpt.edu.cook_now_app.model.FoodRecipe;
 
 public class FoodRecipesActivity extends AppCompatActivity {
+    public static final String EXTRA_ID = "id";
     private Toolbar toolbar;
     private TextView nameFoodType;
     private RecyclerView foodRecipesRecyclerView;
@@ -61,13 +63,19 @@ public class FoodRecipesActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(this, 2);
         foodRecipesRecyclerView.setLayoutManager(linearLayoutManager);
 
-        foodRecipeAdapter = new FoodRecipeAdapter(foodRecipes);
+        foodRecipeAdapter = new FoodRecipeAdapter(foodRecipes, foodRecipe -> {
+            Intent intent = new Intent(FoodRecipesActivity.this, FoodRecipeDetailActivity.class);
+            intent.putExtra(EXTRA_ID, foodRecipe.getId());
+            startActivity(intent);
+        });
         foodRecipesRecyclerView.setAdapter(foodRecipeAdapter);
+
+        foodRecipesRecyclerView.setNestedScrollingEnabled(false);
     }
 
     private void fetchFoodListFormFireBase() {
         DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("recipes");
-        int id = getIntent().getIntExtra("id", 0);
+        int id = getIntent().getIntExtra(HomeFragment.EXTRA_ID, 0);
         Query query = recipeRef.orderByChild("id_type").equalTo(id);
         query.addChildEventListener(new ChildEventListener() {
             @Override

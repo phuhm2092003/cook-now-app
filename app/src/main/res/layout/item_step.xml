@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:gravity="top"
+    android:layout_marginBottom="8dp">
+    <TextView
+        android:background="@drawable/box_step_number"
+        android:id="@+id/stepNumber"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/inter_regular"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:text="1" />
+    <TextView
+        android:layout_marginStart="10dp"
+        android:id="@+id/stepText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_regular"
+        android:textColor="@color/BlackPrimary"
+        android:textSize="14sp"
+        android:text="Text" />
+</LinearLayout>

@@ -14,13 +14,16 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import fpt.edu.cook_now_app.R;
+import fpt.edu.cook_now_app.interfaces.ItemFoodRecipeOnClick;
 import fpt.edu.cook_now_app.model.FoodRecipe;
 
 public class FoodRecipeAdapter extends RecyclerView.Adapter<FoodRecipeAdapter.FoodRecipesViewHolder> {
     private List<FoodRecipe> listFoodRecipe;
+    private ItemFoodRecipeOnClick itemFoodRecipeOnClick;
 
-    public FoodRecipeAdapter(List<FoodRecipe> listFoodRecipe) {
+    public FoodRecipeAdapter(List<FoodRecipe> listFoodRecipe, ItemFoodRecipeOnClick itemFoodRecipeOnClick) {
         this.listFoodRecipe = listFoodRecipe;
+        this.itemFoodRecipeOnClick = itemFoodRecipeOnClick;
     }
 
     @NonNull
@@ -43,6 +46,9 @@ public class FoodRecipeAdapter extends RecyclerView.Adapter<FoodRecipeAdapter.Fo
                 .load(foodRecipe.getImage())
                 .placeholder(R.drawable.placeholder_food)
                 .into(holder.imageFood);
+        holder.itemView.setOnClickListener(view -> {
+            itemFoodRecipeOnClick.onItemOnClick(foodRecipe);
+        });
     }
 
     @Override

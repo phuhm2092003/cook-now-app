@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/White1Primary"
+    android:scrollbars="none"
     tools:context=".view.FoodRecipesActivity">
 
     <LinearLayout
@@ -38,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/inter_medium"
+            android:fontFamily="@font/inter_semi_bold"
             android:text="Các món ăn liên quan"
             android:textColor="@color/BlackPrimary"
             android:textSize="16sp" />
