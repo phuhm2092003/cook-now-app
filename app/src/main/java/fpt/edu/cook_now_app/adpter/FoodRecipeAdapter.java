@@ -16,6 +16,7 @@ import java.util.List;
 import fpt.edu.cook_now_app.R;
 import fpt.edu.cook_now_app.interfaces.ItemFoodRecipeOnClick;
 import fpt.edu.cook_now_app.model.FoodRecipe;
+import fpt.edu.cook_now_app.model.FoodType;
 
 public class FoodRecipeAdapter extends RecyclerView.Adapter<FoodRecipeAdapter.FoodRecipesViewHolder> {
     private List<FoodRecipe> listFoodRecipe;
@@ -24,6 +25,10 @@ public class FoodRecipeAdapter extends RecyclerView.Adapter<FoodRecipeAdapter.Fo
     public FoodRecipeAdapter(List<FoodRecipe> listFoodRecipe, ItemFoodRecipeOnClick itemFoodRecipeOnClick) {
         this.listFoodRecipe = listFoodRecipe;
         this.itemFoodRecipeOnClick = itemFoodRecipeOnClick;
+    }
+
+    public void setFoodReiceps(List<FoodRecipe> list) {
+        this.listFoodRecipe = list;
     }
 
     @NonNull
