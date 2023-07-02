@@ -39,7 +39,7 @@ public class FoodRecipeDetailActivity extends AppCompatActivity {
 
     private void fetchDataAcitvityFromFirBase() {
         DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("recipes");
-        int id = getIntent().getIntExtra(HomeFragment.EXTRA_ID, 0);
+        int id = getIntent().getIntExtra(FoodRecipesActivity.EXTRA_ID, 0);
         Query query = recipeRef.orderByChild("id").equalTo(id);
         query.addChildEventListener(new ChildEventListener() {
             @Override
