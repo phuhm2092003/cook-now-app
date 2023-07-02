@@ -1,4 +1,4 @@
-package fpt.edu.cook_now_app.view;
+package fpt.edu.cook_now_app.view.foodrecipe;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,23 +22,22 @@ import fpt.edu.cook_now_app.R;
 import fpt.edu.cook_now_app.adpter.IngredientAdapter;
 import fpt.edu.cook_now_app.adpter.StepAdapter;
 import fpt.edu.cook_now_app.model.FoodRecipe;
+import fpt.edu.cook_now_app.view.HomeFragment;
 
 public class FoodRecipeDetailActivity extends AppCompatActivity {
-    private ImageView image;
+    private ImageView image, backButtom;
     private TextView name;
-    private RecyclerView ingredientReacyclerView, stepReacyclerView;
-
-
+    private RecyclerView ingredientReacyclerView, stepRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_recipe_detail);
-        image = findViewById(R.id.image);
-        name = findViewById(R.id.name);
-        ingredientReacyclerView = findViewById(R.id.ingredientReacyclerView);
-        stepReacyclerView = findViewById(R.id.stepReacyclerView);
+        initView();
+        fetchDataAcitvityFromFirBase();
+    }
 
+    private void fetchDataAcitvityFromFirBase() {
         DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("recipes");
         int id = getIntent().getIntExtra(HomeFragment.EXTRA_ID, 0);
         Query query = recipeRef.orderByChild("id").equalTo(id);
@@ -51,18 +50,8 @@ public class FoodRecipeDetailActivity extends AppCompatActivity {
                         .load(foodRecipe.getImage())
                         .into(image);
                 name.setText(foodRecipe.getName());
-
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(FoodRecipeDetailActivity.this, LinearLayoutManager.VERTICAL, false);
-                ingredientReacyclerView.setLayoutManager(linearLayoutManager);
-                IngredientAdapter ingredientAdapter = new IngredientAdapter(foodRecipe.getIngredients());
-                ingredientReacyclerView.setAdapter(ingredientAdapter);
-                ingredientReacyclerView.setNestedScrollingEnabled(false);
-
-                LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(FoodRecipeDetailActivity.this, LinearLayoutManager.VERTICAL, false);
-                stepReacyclerView.setLayoutManager(linearLayoutManager1);
-                StepAdapter stepAdapter = new StepAdapter(foodRecipe.getSteps());
-                stepReacyclerView.setAdapter(stepAdapter);
-                stepReacyclerView.setNestedScrollingEnabled(false);
+                fetchIngredientRecyclerView(foodRecipe);
+                fetchStepRecyclerView(foodRecipe);
             }
 
             @Override
@@ -85,4 +74,32 @@ public class FoodRecipeDetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void initView() {
+        image = findViewById(R.id.image);
+        backButtom = findViewById(R.id.backButtom);
+        name = findViewById(R.id.name);
+        ingredientReacyclerView = findViewById(R.id.ingredientReacyclerView);
+        stepRecyclerView = findViewById(R.id.stepReacyclerView);
+        backButtom.setOnClickListener(view -> onBackPressed());
+    }
+
+    private void fetchIngredientRecyclerView(FoodRecipe foodRecipe) {
+        // Lấy dữ liệu các nguyên liệu nấu ăn gán cho recyclerview
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(FoodRecipeDetailActivity.this, LinearLayoutManager.VERTICAL, false);
+        ingredientReacyclerView.setLayoutManager(linearLayoutManager);
+        IngredientAdapter ingredientAdapter = new IngredientAdapter(foodRecipe.getIngredients());
+        ingredientReacyclerView.setAdapter(ingredientAdapter);
+        ingredientReacyclerView.setNestedScrollingEnabled(false);
+    }
+
+    private void fetchStepRecyclerView(FoodRecipe foodRecipe) {
+        // Lấy dữ liệu các bước nấu ăn gán cho recyclerview
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(FoodRecipeDetailActivity.this, LinearLayoutManager.VERTICAL, false);
+        stepRecyclerView.setLayoutManager(linearLayoutManager1);
+        StepAdapter stepAdapter = new StepAdapter(foodRecipe.getSteps());
+        stepRecyclerView.setAdapter(stepAdapter);
+        stepRecyclerView.setNestedScrollingEnabled(false);
+    }
+
 }

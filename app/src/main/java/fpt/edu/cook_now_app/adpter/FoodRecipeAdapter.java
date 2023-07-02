@@ -27,7 +27,7 @@ public class FoodRecipeAdapter extends RecyclerView.Adapter<FoodRecipeAdapter.Fo
         this.itemFoodRecipeOnClick = itemFoodRecipeOnClick;
     }
 
-    public void setFoodReiceps(List<FoodRecipe> list) {
+    public void setFoodReicepListFilter(List<FoodRecipe> list) {
         this.listFoodRecipe = list;
     }
 

@@ -24,7 +24,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +31,13 @@ import java.util.List;
 import fpt.edu.cook_now_app.R;
 import fpt.edu.cook_now_app.adpter.FoodRecipeAdapter;
 import fpt.edu.cook_now_app.model.FoodRecipe;
-import fpt.edu.cook_now_app.model.FoodType;
+import fpt.edu.cook_now_app.view.foodrecipe.FoodRecipeDetailActivity;
+import fpt.edu.cook_now_app.view.foodrecipe.FoodRecipesActivity;
 
 public class SearchFragment extends Fragment {
     private RecyclerView foodRecipesRecyclerView;
     private FoodRecipeAdapter foodRecipeAdapter;
-    private List<FoodRecipe> foodRecipes;
+    private List<FoodRecipe> foodRecipeList;
     private EditText searchEditText;
     private TextView resultSearch;
     @Override
@@ -52,7 +52,7 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        initFoodRecyclerView();
+        setUpFoodRecipesRecyclerView();
         fetchFoodListFormFireBase();
         filterFoodRecipeList();
     }
@@ -64,21 +64,24 @@ public class SearchFragment extends Fragment {
     }
 
 
-    private void initFoodRecyclerView() {
-        foodRecipes = new ArrayList<>();
+    private void setUpFoodRecipesRecyclerView() {
+        foodRecipeList = new ArrayList<>();
 
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(getActivity(), 2);
         foodRecipesRecyclerView.setLayoutManager(linearLayoutManager);
 
-        foodRecipeAdapter = new FoodRecipeAdapter(foodRecipes, foodRecipe -> {
-            Intent intent = new Intent(getActivity(), FoodRecipeDetailActivity.class);
-            intent.putExtra("id", foodRecipe.getId());
-            startActivity(intent);
-        });
+        foodRecipeAdapter = new FoodRecipeAdapter(foodRecipeList, foodRecipe -> launchFoodRecipeDetailActivity(foodRecipe));
         foodRecipesRecyclerView.setAdapter(foodRecipeAdapter);
 
         foodRecipesRecyclerView.setNestedScrollingEnabled(false);
     }
+
+    private void launchFoodRecipeDetailActivity(FoodRecipe foodRecipe) {
+        Intent intent = new Intent(getActivity(), FoodRecipeDetailActivity.class);
+        intent.putExtra("id", foodRecipe.getId());
+        startActivity(intent);
+    }
+
 
     private void fetchFoodListFormFireBase() {
         DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("recipes");
@@ -88,16 +91,16 @@ public class SearchFragment extends Fragment {
                 FoodRecipe foodRecipe = snapshot.getValue(FoodRecipe.class);
                 if (foodRecipe != null) {
                     int index = -1;
-                    for (int i = 0; i < foodRecipes.size(); i++) {
-                        if (foodRecipe.getId() == foodRecipes.get(i).getId()) {
+                    for (int i = 0; i < foodRecipeList.size(); i++) {
+                        if (foodRecipe.getId() == foodRecipeList.get(i).getId()) {
                             index = i;
                         }
                     }
                     if (index != -1) {
-                        foodRecipes.set(index, foodRecipe);
+                        foodRecipeList.set(index, foodRecipe);
                         foodRecipeAdapter.notifyItemChanged(index);
                     } else {
-                        foodRecipes.add(foodRecipe);
+                        foodRecipeList.add(foodRecipe);
                         foodRecipeAdapter.notifyDataSetChanged();
                     }
                 }
@@ -108,13 +111,13 @@ public class SearchFragment extends Fragment {
                 FoodRecipe foodRecipeUpdate = snapshot.getValue(FoodRecipe.class);
                 if (foodRecipeUpdate != null) {
                     int index = -1;
-                    for (int i = 0; i < foodRecipes.size(); i++) {
-                        if (foodRecipeUpdate.getId() == foodRecipes.get(i).getId()) {
+                    for (int i = 0; i < foodRecipeList.size(); i++) {
+                        if (foodRecipeUpdate.getId() == foodRecipeList.get(i).getId()) {
                             index = i;
                         }
                     }
                     if (index != -1) {
-                        foodRecipes.set(index, foodRecipeUpdate);
+                        foodRecipeList.set(index, foodRecipeUpdate);
                         foodRecipeAdapter.notifyItemChanged(index);
                     }
                 }
@@ -147,31 +150,7 @@ public class SearchFragment extends Fragment {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Tìm kiếm món ăn theo tên
-                String searchText = charSequence.toString().trim().toLowerCase();
-                List<FoodRecipe> foodRecipesFilter;
-
-                if (searchText.isEmpty()) {
-                    foodRecipesFilter = foodRecipes;
-                    foodRecipesRecyclerView.setVisibility(View.GONE);
-                } else {
-                    foodRecipesFilter = new ArrayList<>();
-                    for (FoodRecipe foodRecipe : foodRecipes) {
-                        if (foodRecipe.getName().toLowerCase().contains(searchText)) {
-                            foodRecipesFilter.add(foodRecipe);
-                        }
-                    }
-                    if(foodRecipesFilter.size() == 0){
-                        foodRecipesRecyclerView.setVisibility(View.GONE);
-                        resultSearch.setVisibility(View.VISIBLE);
-                    }else {
-                        foodRecipesRecyclerView.setVisibility(View.VISIBLE);
-                        resultSearch.setVisibility(View.GONE);
-                    }
-                }
-
-                foodRecipeAdapter.setFoodReiceps(foodRecipesFilter);
-                foodRecipeAdapter.notifyDataSetChanged();
+                filterFoodRecipeByName(charSequence);
             }
 
             @Override
@@ -179,5 +158,32 @@ public class SearchFragment extends Fragment {
 
             }
         });
+    }
+
+    private void filterFoodRecipeByName(CharSequence charSequence) {
+        String searchText = charSequence.toString().trim().toLowerCase();
+        List<FoodRecipe> foodRecipesFilter;
+
+        if (searchText.isEmpty()) {
+            foodRecipesFilter = foodRecipeList;
+            foodRecipesRecyclerView.setVisibility(View.GONE);
+        } else {
+            foodRecipesFilter = new ArrayList<>();
+            for (FoodRecipe foodRecipe : foodRecipeList) {
+                if (foodRecipe.getName().toLowerCase().contains(searchText)) {
+                    foodRecipesFilter.add(foodRecipe);
+                }
+            }
+            if(foodRecipesFilter.size() == 0){
+                foodRecipesRecyclerView.setVisibility(View.GONE);
+                resultSearch.setVisibility(View.VISIBLE);
+            }else {
+                foodRecipesRecyclerView.setVisibility(View.VISIBLE);
+                resultSearch.setVisibility(View.GONE);
+            }
+        }
+
+        foodRecipeAdapter.setFoodReicepListFilter(foodRecipesFilter);
+        foodRecipeAdapter.notifyDataSetChanged();
     }
 }

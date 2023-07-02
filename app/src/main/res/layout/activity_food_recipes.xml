@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/White1Primary"
     android:scrollbars="none"
-    tools:context=".view.FoodRecipesActivity">
+    tools:context=".view.foodrecipe.FoodRecipesActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package fpt.edu.cook_now_app.view;
+package fpt.edu.cook_now_app.view.foodrecipe;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +25,7 @@ import java.util.List;
 import fpt.edu.cook_now_app.R;
 import fpt.edu.cook_now_app.adpter.FoodRecipeAdapter;
 import fpt.edu.cook_now_app.model.FoodRecipe;
+import fpt.edu.cook_now_app.view.HomeFragment;
 
 public class FoodRecipesActivity extends AppCompatActivity {
     public static final String EXTRA_ID = "id";
@@ -32,7 +33,7 @@ public class FoodRecipesActivity extends AppCompatActivity {
     private TextView nameFoodType;
     private RecyclerView foodRecipesRecyclerView;
     private FoodRecipeAdapter foodRecipeAdapter;
-    private List<FoodRecipe> foodRecipes;
+    private List<FoodRecipe> foodRecipeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,36 +42,38 @@ public class FoodRecipesActivity extends AppCompatActivity {
 
         initView();
         setTitleToolBar();
-        initFoodRecyclerView();
+        setUpFoodRecipesRecyclerView();
         fetchFoodListFormFireBase();
     }
 
     private void initView() {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
+        foodRecipesRecyclerView = findViewById(R.id.foodRecipesRecyclerView);
         nameFoodType = findViewById(R.id.nameFoodType);
     }
 
     private void setTitleToolBar() {
-        String name = getIntent().getStringExtra("name");
+        String name = getIntent().getStringExtra(HomeFragment.EXTRA_NAME);
         nameFoodType.setText(name);
     }
 
-    private void initFoodRecyclerView() {
-        foodRecipes = new ArrayList<>();
+    private void setUpFoodRecipesRecyclerView() {
+        foodRecipeList = new ArrayList<>();
 
-        foodRecipesRecyclerView = findViewById(R.id.foodRecipesRecyclerView);
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(this, 2);
         foodRecipesRecyclerView.setLayoutManager(linearLayoutManager);
 
-        foodRecipeAdapter = new FoodRecipeAdapter(foodRecipes, foodRecipe -> {
-            Intent intent = new Intent(FoodRecipesActivity.this, FoodRecipeDetailActivity.class);
-            intent.putExtra(EXTRA_ID, foodRecipe.getId());
-            startActivity(intent);
-        });
+        foodRecipeAdapter = new FoodRecipeAdapter(foodRecipeList, foodRecipe -> launchFoodRecipeDetailActivity(foodRecipe));
         foodRecipesRecyclerView.setAdapter(foodRecipeAdapter);
 
         foodRecipesRecyclerView.setNestedScrollingEnabled(false);
+    }
+
+    private void launchFoodRecipeDetailActivity(FoodRecipe foodRecipe) {
+        Intent intent = new Intent(FoodRecipesActivity.this, FoodRecipeDetailActivity.class);
+        intent.putExtra(EXTRA_ID, foodRecipe.getId());
+        startActivity(intent);
     }
 
     private void fetchFoodListFormFireBase() {
@@ -83,16 +86,16 @@ public class FoodRecipesActivity extends AppCompatActivity {
                 FoodRecipe foodRecipe = snapshot.getValue(FoodRecipe.class);
                 if (foodRecipe != null) {
                     int index = -1;
-                    for (int i = 0; i < foodRecipes.size(); i++) {
-                        if (foodRecipe.getId() == foodRecipes.get(i).getId()) {
+                    for (int i = 0; i < foodRecipeList.size(); i++) {
+                        if (foodRecipe.getId() == foodRecipeList.get(i).getId()) {
                             index = i;
                         }
                     }
                     if (index != -1) {
-                        foodRecipes.set(index, foodRecipe);
+                        foodRecipeList.set(index, foodRecipe);
                         foodRecipeAdapter.notifyItemChanged(index);
                     } else {
-                        foodRecipes.add(foodRecipe);
+                        foodRecipeList.add(foodRecipe);
                         foodRecipeAdapter.notifyDataSetChanged();
                     }
                 }
@@ -103,13 +106,14 @@ public class FoodRecipesActivity extends AppCompatActivity {
                 FoodRecipe foodRecipeUpdate = snapshot.getValue(FoodRecipe.class);
                 if (foodRecipeUpdate != null) {
                     int index = -1;
-                    for (int i = 0; i < foodRecipes.size(); i++) {
-                        if (foodRecipeUpdate.getId() == foodRecipes.get(i).getId()) {
+                    for (int i = 0; i < foodRecipeList.size(); i++) {
+                        if (foodRecipeUpdate.getId() == foodRecipeList.get(i).getId()) {
                             index = i;
                         }
                     }
+
                     if (index != -1) {
-                        foodRecipes.set(index, foodRecipeUpdate);
+                        foodRecipeList.set(index, foodRecipeUpdate);
                         foodRecipeAdapter.notifyItemChanged(index);
                     }
                 }

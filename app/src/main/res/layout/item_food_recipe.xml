@@ -6,7 +6,7 @@
     android:layout_marginEnd="6dp"
     android:layout_marginStart="6dp"
     android:layout_marginBottom="12dp"
-    app:cardElevation="1dp"
+    app:cardElevation="0dp"
     app:cardCornerRadius="8dp">
 
     <LinearLayout
@@ -18,10 +18,11 @@
             android:id="@+id/imageFood"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/img_type_food_example" />
 
         <LinearLayout
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -30,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -57,7 +58,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
-                android:fontFamily="@font/inter_bold"
+                android:fontFamily="@font/inter_semi_bold"
                 android:text="Cách làm thịt gà xào sả ớt"
                 android:textColor="@color/BlackPrimary"
                 android:textSize="14sp" />
