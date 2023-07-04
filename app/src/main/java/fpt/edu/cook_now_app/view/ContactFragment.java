@@ -20,7 +20,6 @@ import fpt.edu.cook_now_app.R;
 import fpt.edu.cook_now_app.model.Contact;
 
 public class ContactFragment extends Fragment {
-
     private EditText fullnameEditText, phoneNumberEditText, emailEditText, contentEditText;
     private ConstraintLayout sendIdeaButton;
     public static final String REGEX_FULLNAME = ".*\\d.*";
@@ -29,6 +28,8 @@ public class ContactFragment extends Fragment {
     public static final String FULLNAME_INVALID_MESSAGE = "Họ và tên vui lòng không dùng ký tự số";
     public static final String PHONE_NUMBER_INVALID_MESSAGE = "Nhập số điện thoại sai";
     public static final String EMAIL_INVALID_MESSAGE = "Nhập email sai định dạng";
+    public static final String SEND_IDEA_SUCCESS_MESSAGE = "Gửi phản hồi thành công";
+    public static final String SEND_IDEA_FAILED_MESSAGER = "Gửi phản hồi thất bại";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +41,7 @@ public class ContactFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
+        setListeners();
     }
 
     private void initView(@NonNull View view) {
@@ -48,7 +50,10 @@ public class ContactFragment extends Fragment {
         emailEditText = view.findViewById(R.id.emailEditText);
         contentEditText = view.findViewById(R.id.contentEditText);
         sendIdeaButton = view.findViewById(R.id.sendIdeaButton);
-        sendIdeaButton.setOnClickListener(view1 -> handleSendIdea());
+    }
+
+    private void setListeners() {
+        sendIdeaButton.setOnClickListener(itemView -> handleSendIdea());
     }
 
     private void handleSendIdea() {
@@ -77,7 +82,7 @@ public class ContactFragment extends Fragment {
             return;
         }
 
-        performSendIdea(fullname, phoneNumber, email, content);
+        performAddContactToFirebaseDatabase(fullname, phoneNumber, email, content);
 
     }
 
@@ -97,27 +102,27 @@ public class ContactFragment extends Fragment {
         return !email.matches(REGEX_EMAIL);
     }
 
-    private void performSendIdea(String fullname, String phoneNumber, String email, String content) {
+    private void performAddContactToFirebaseDatabase(String fullname, String phoneNumber, String email, String content) {
         DatabaseReference contactRef = FirebaseDatabase
                 .getInstance()
                 .getReference("contacts")
                 .push();
 
-        // Add data to FireBase database
         Contact contact = new Contact(contactRef.getKey(), fullname, phoneNumber, email, content);
         contactRef.setValue(contact)
                 .addOnSuccessListener(unused -> {
-                    showMessageToast("Gửi phản hồi thành công");
+                    showMessageToast(SEND_IDEA_SUCCESS_MESSAGE);
                     clearText();
                 })
-                .addOnFailureListener(e -> showMessageToast("Gửi phản hồi thất bại"));
+                .addOnFailureListener(e -> showMessageToast(SEND_IDEA_FAILED_MESSAGER));
     }
 
     private void clearText() {
-        fullnameEditText.setText("");
-        phoneNumberEditText.setText("");
-        emailEditText.setText("");
-        contentEditText.setText("");
+        EditText[] editTexts = {fullnameEditText, phoneNumberEditText, emailEditText, contentEditText};
+
+        for (EditText editText : editTexts) {
+            editText.setText("");
+        }
     }
 
     private void showMessageToast(String mess) {
