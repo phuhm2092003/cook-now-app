@@ -22,7 +22,7 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
     <!-- Main Screen theme. -->
-    <style name="Theme.MainScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.MainActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/PrimaryColor</item>
         <item name="colorPrimaryVariant">@color/white</item>

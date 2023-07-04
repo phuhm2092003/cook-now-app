@@ -24,7 +24,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.MainScreen" />
+            android:theme="@style/Theme.MainActivity" />
         <activity
             android:name=".view.SplashActivity"
             android:exported="true"

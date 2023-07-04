@@ -3,6 +3,7 @@ package fpt.edu.cook_now_app;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         bottomMenu.setOnItemSelectedListener(menuItem -> handleBottomMenuItemSelected(menuItem));
     }
 
+    @SuppressLint("NonConstantResourceId")
     private boolean handleBottomMenuItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_home:
