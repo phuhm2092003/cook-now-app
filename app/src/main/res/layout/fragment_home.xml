@@ -75,6 +75,26 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/shimmer_layout_home" />
+
+                <include layout="@layout/shimmer_layout_home" />
+
+                <include layout="@layout/shimmer_layout_home" />
+
+                <include layout="@layout/shimmer_layout_home" />
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/foodTypeRecyclerView"
             android:layout_width="match_parent"
@@ -83,6 +103,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="4dp"
             android:scrollbars="none"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"
             tools:listitem="@layout/item_food_type" />

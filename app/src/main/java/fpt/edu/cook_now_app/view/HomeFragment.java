@@ -2,6 +2,7 @@ package fpt.edu.cook_now_app.view;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.telephony.VisualVoicemailSms;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,6 +41,7 @@ public class HomeFragment extends Fragment {
     private FoodTypeAdapter foodTypeAdapter;
     private List<FoodType> foodTypeList;
     private EditText searchEditText;
+    private ShimmerFrameLayout shimmerFrameLayout;
     public static final String EXTRA_ID = "id";
     public static final String EXTRA_NAME = "name";
 
@@ -57,6 +62,7 @@ public class HomeFragment extends Fragment {
     private void initView(@NonNull View view) {
         foodTypeRecyclerView = view.findViewById(R.id.foodTypeRecyclerView);
         searchEditText = view.findViewById(R.id.searchEditText);
+        shimmerFrameLayout = view.findViewById(R.id.shimmer_layout);
     }
 
     private void setUpFoodTypeRecyclerView() {
@@ -79,6 +85,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchFoodTypeListFromFirebase() {
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.startShimmer();
+        foodTypeRecyclerView.setVisibility(View.GONE);
+
         DatabaseReference foodTypeRef = FirebaseDatabase.getInstance().getReference("foods_type");
         foodTypeRef.addChildEventListener(new ChildEventListener() {
             @SuppressLint("NotifyDataSetChanged")
@@ -138,6 +148,14 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                shimmerFrameLayout.setVisibility(View.GONE);
+                shimmerFrameLayout.stopShimmer();
+                foodTypeRecyclerView.setVisibility(View.VISIBLE);
+            }
+        }, 3000);
     }
 
     private void filterFoodTypeList() {
