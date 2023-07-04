@@ -7,10 +7,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,6 +32,8 @@ public class FoodRecipeDetailActivity extends AppCompatActivity {
     private ImageView image, backButtom;
     private TextView name;
     private RecyclerView ingredientReacyclerView, stepRecyclerView;
+    private LinearLayout layoutMain;
+    private ShimmerFrameLayout shimmerFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,9 @@ public class FoodRecipeDetailActivity extends AppCompatActivity {
     }
 
     private void fetchDataAcitvityFromFirBase() {
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.startShimmer();
+        layoutMain.setVisibility(View.GONE);
         DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("recipes");
         int id = getIntent().getIntExtra(FoodRecipesActivity.EXTRA_ID, 0);
         Query query = recipeRef.orderByChild("id").equalTo(id);
@@ -73,6 +82,14 @@ public class FoodRecipeDetailActivity extends AppCompatActivity {
 
             }
         });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                shimmerFrameLayout.setVisibility(View.GONE);
+                shimmerFrameLayout.stopShimmer();
+                layoutMain.setVisibility(View.VISIBLE);
+            }
+        }, 1000);
     }
 
     private void initView() {
@@ -82,6 +99,8 @@ public class FoodRecipeDetailActivity extends AppCompatActivity {
         ingredientReacyclerView = findViewById(R.id.ingredientReacyclerView);
         stepRecyclerView = findViewById(R.id.stepReacyclerView);
         backButtom.setOnClickListener(view -> onBackPressed());
+        layoutMain = findViewById(R.id.layoutMain);
+        shimmerFrameLayout = findViewById(R.id.shimmerLayout);
     }
 
     private void fetchIngredientRecyclerView(FoodRecipe foodRecipe) {
