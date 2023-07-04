@@ -13,7 +13,6 @@ import fpt.edu.cook_now_app.adpter.PageAdapter;
 public class MainActivity extends AppCompatActivity {
     private ViewPager2 mainViewPager;
     private BottomNavigationView bottomMenu;
-
     public static final int INDEX_PAGE_HOME = 0;
     public static final int INDEX_PAGE_SEARCH = 1;
     public static final int INDEX_PAGE_CONTACT = 2;
