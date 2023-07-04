@@ -10,8 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +37,7 @@ public class FoodRecipesActivity extends AppCompatActivity {
     private RecyclerView foodRecipesRecyclerView;
     private FoodRecipeAdapter foodRecipeAdapter;
     private List<FoodRecipe> foodRecipeList;
+    private ShimmerFrameLayout shimmerFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class FoodRecipesActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
         foodRecipesRecyclerView = findViewById(R.id.foodRecipesRecyclerView);
         nameFoodType = findViewById(R.id.nameFoodType);
+        shimmerFrameLayout = findViewById(R.id.shimmer_layout);
     }
 
     private void setTitleToolBar() {
@@ -77,6 +82,9 @@ public class FoodRecipesActivity extends AppCompatActivity {
     }
 
     private void fetchFoodListFormFireBase() {
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.startShimmer();
+        foodRecipesRecyclerView.setVisibility(View.GONE);
         DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("recipes");
         int id = getIntent().getIntExtra(HomeFragment.EXTRA_ID, 0);
         Query query = recipeRef.orderByChild("id_type").equalTo(id);
@@ -134,6 +142,14 @@ public class FoodRecipesActivity extends AppCompatActivity {
 
             }
         });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                shimmerFrameLayout.setVisibility(View.GONE);
+                shimmerFrameLayout.stopShimmer();
+                foodRecipesRecyclerView.setVisibility(View.VISIBLE);
+            }
+        }, 2000);
     }
 
 }
