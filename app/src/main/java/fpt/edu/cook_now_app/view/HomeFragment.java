@@ -2,18 +2,17 @@ package fpt.edu.cook_now_app.view;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
-import android.telephony.VisualVoicemailSms;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -37,6 +36,7 @@ import fpt.edu.cook_now_app.model.FoodType;
 import fpt.edu.cook_now_app.view.foodrecipe.FoodRecipesActivity;
 
 public class HomeFragment extends Fragment {
+    public static final int SHIMMER_LAYOUT_HIDE_DELAY = 2000;
     private RecyclerView foodTypeRecyclerView;
     private FoodTypeAdapter foodTypeAdapter;
     private List<FoodType> foodTypeList;
@@ -56,24 +56,23 @@ public class HomeFragment extends Fragment {
         initView(view);
         setUpFoodTypeRecyclerView();
         fetchFoodTypeListFromFirebase();
-        filterFoodTypeList();
+        setEventOnChangeTextSearchEditText();
     }
 
     private void initView(@NonNull View view) {
         foodTypeRecyclerView = view.findViewById(R.id.foodTypeRecyclerView);
         searchEditText = view.findViewById(R.id.searchEditText);
-        shimmerFrameLayout = view.findViewById(R.id.shimmer_layout);
+        shimmerFrameLayout = view.findViewById(R.id.shimmerFrameLayout);
     }
 
     private void setUpFoodTypeRecyclerView() {
         foodTypeList = new ArrayList<>();
 
-        LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 2);
-        foodTypeRecyclerView.setLayoutManager(linearLayoutManager);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        foodTypeRecyclerView.setLayoutManager(gridLayoutManager);
 
         foodTypeAdapter = new FoodTypeAdapter(foodTypeList, foodType -> launchFoodRecipesActivity(foodType));
         foodTypeRecyclerView.setAdapter(foodTypeAdapter);
-
         foodTypeRecyclerView.setNestedScrollingEnabled(false);
     }
 
@@ -89,8 +88,9 @@ public class HomeFragment extends Fragment {
         shimmerFrameLayout.startShimmer();
         foodTypeRecyclerView.setVisibility(View.GONE);
 
-        DatabaseReference foodTypeRef = FirebaseDatabase.getInstance().getReference("foods_type");
-        foodTypeRef.addChildEventListener(new ChildEventListener() {
+        // Get data from real time database firebase
+        DatabaseReference foodTypeReference = FirebaseDatabase.getInstance().getReference("foods_type");
+        foodTypeReference.addChildEventListener(new ChildEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -135,7 +135,21 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                FoodType foodTypeRemoved = snapshot.getValue(FoodType.class);
+                if (foodTypeRemoved != null) {
+                    int index = -1;
+                    for (int i = 0; i < foodTypeList.size(); i++) {
+                        if (foodTypeList.get(i).getId() == foodTypeRemoved.getId()) {
+                            index = i;
+                            break;
+                        }
+                    }
 
+                    if (index != -1) {
+                        foodTypeList.remove(index);
+                        foodTypeAdapter.notifyDataSetChanged();
+                    }
+                }
             }
 
             @Override
@@ -148,17 +162,15 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                shimmerFrameLayout.setVisibility(View.GONE);
-                shimmerFrameLayout.stopShimmer();
-                foodTypeRecyclerView.setVisibility(View.VISIBLE);
-            }
-        }, 3000);
+
+        new Handler().postDelayed(() -> {
+            shimmerFrameLayout.setVisibility(View.GONE);
+            shimmerFrameLayout.stopShimmer();
+            foodTypeRecyclerView.setVisibility(View.VISIBLE);
+        }, SHIMMER_LAYOUT_HIDE_DELAY);
     }
 
-    private void filterFoodTypeList() {
+    private void setEventOnChangeTextSearchEditText() {
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

@@ -26,8 +26,8 @@ public class FoodTypeAdapter extends RecyclerView.Adapter<FoodTypeAdapter.FoodTy
         this.itemFoodTypeOnClick = itemFoodTypeOnClick;
     }
 
-    public void setFoodTypeListFilter(List<FoodType> list) {
-        this.list = list;
+    public void setFoodTypeListFilter(List<FoodType> foodTypeListFilter) {
+        this.list = foodTypeListFilter;
     }
 
     @NonNull
