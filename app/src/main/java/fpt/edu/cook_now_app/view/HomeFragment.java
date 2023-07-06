@@ -96,14 +96,7 @@ public class HomeFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 FoodType foodType = snapshot.getValue(FoodType.class);
                 if (foodType != null) {
-                    int index = -1;
-                    for (int i = 0; i < foodTypeList.size(); i++) {
-                        if (foodTypeList.get(i).getId() == foodType.getId()) {
-                            index = i;
-                            break;
-                        }
-                    }
-
+                    int index = findFoodTypeIndex(foodType.getId());
                     if (index != -1) {
                         foodTypeList.set(index, foodType);
                         foodTypeAdapter.notifyItemChanged(index);
@@ -118,13 +111,7 @@ public class HomeFragment extends Fragment {
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 FoodType foodTypeUpdate = snapshot.getValue(FoodType.class);
                 if (foodTypeUpdate != null) {
-                    int index = -1;
-                    for (int i = 0; i < foodTypeList.size(); i++) {
-                        if (foodTypeList.get(i).getId() == foodTypeUpdate.getId()) {
-                            index = i;
-                            break;
-                        }
-                    }
+                    int index = findFoodTypeIndex(foodTypeUpdate.getId());
 
                     if (index != -1) {
                         foodTypeList.set(index, foodTypeUpdate);
@@ -137,13 +124,7 @@ public class HomeFragment extends Fragment {
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 FoodType foodTypeRemoved = snapshot.getValue(FoodType.class);
                 if (foodTypeRemoved != null) {
-                    int index = -1;
-                    for (int i = 0; i < foodTypeList.size(); i++) {
-                        if (foodTypeList.get(i).getId() == foodTypeRemoved.getId()) {
-                            index = i;
-                            break;
-                        }
-                    }
+                    int index = findFoodTypeIndex(foodTypeRemoved.getId());
 
                     if (index != -1) {
                         foodTypeList.remove(index);
@@ -168,6 +149,17 @@ public class HomeFragment extends Fragment {
             shimmerFrameLayout.stopShimmer();
             foodTypeRecyclerView.setVisibility(View.VISIBLE);
         }, SHIMMER_LAYOUT_HIDE_DELAY);
+    }
+
+    private int findFoodTypeIndex(int idFoodType) {
+        int index = -1;
+        for (int i = 0; i < foodTypeList.size(); i++) {
+            if (foodTypeList.get(i).getId() == idFoodType) {
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 
     private void setEventOnChangeTextSearchEditText() {
